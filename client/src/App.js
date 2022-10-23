@@ -5,7 +5,7 @@ function App() {
   const [newUser, setNewUser] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:3001/getUsers")
+    fetch("http://localhost:3001/users/getUsers")
       .then(res => res.json())
       .then(data => setListOfUsers(data));
 
@@ -13,7 +13,7 @@ function App() {
   }, []);
 
   const createUserHandler = () => {
-    fetch("http://localhost:3001/createUser", {
+    fetch("http://localhost:3001/users/createUser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

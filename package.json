@@ -2,9 +2,9 @@
   "name": "server",
   "version": "1.0.0",
   "description": "MERN App Server side",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "Joel Alves Pereira",

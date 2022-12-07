@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const UserModel = require("./models/Users");
-const userRouter = require("./routers/users");
+const userRouter = require("./routes/users");
 const cors = require("cors");
 
 app.use(express.json()); //to avoid erro while requesting json data

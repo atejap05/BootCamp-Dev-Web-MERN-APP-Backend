@@ -1,21 +1,49 @@
-const mongoose = require("mongoose");
+import {Schema, model} from 'mongoose';
 
-//https://mongoosejs.com/docs/api.html#mongoose_Mongoose-Schema
-const UserSchema = new mongoose.Schema({
+const userSchema = new Schema({
   name: {
     type: String,
     required: true,
   },
-  age: {
+  cpf: {
     type: Number,
     required: true,
+    match: /^\d{11}$/,
+    unique: true
   },
-  username: {
+  email: {
     type: String,
+    required: true,
+    unique: true,
+    lowercase: true,
+    match: /[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/,
+  },
+  orgaoId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Orgao',
     required: false,
   },
-});
+  unidadeId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Unidade',
+    required: false,
+  },
+  passwordHash: { 
+    type: String, 
+    required: true },
+  isAdmin: {
+    type: Boolean, 
+    required: true,
+    match: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+    default: false 
+  },
+},
+{
+  timestamps: true,
+}
+);
 
-// this will create a collection colled users on our db, even overwrite an exitent one
-const UserModel = mongoose.model("users", UserSchema);
-module.exports = UserModel;
+
+const UserModel = model("User", userSchema);
+
+export default UserModel;

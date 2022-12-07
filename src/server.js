@@ -1,22 +1,21 @@
-const express = require("express");
-const app = express();
-const mongoose = require("mongoose");
-const UserModel = require("./models/Users");
-const userRouter = require("./routes/users");
-const cors = require("cors");
+import express from 'express'
+import * as dotenv from 'dotenv'
+import dbConnect from './config/db.config'
+import cors from 'cors'
 
-app.use(express.json()); //to avoid erro while requesting json data
-app.use(cors()); // to avoid issues when connect to react frontend
+//habilitar o servidor a ter variáveis de ambiente
+dotenv.config()
 
-mongoose.connect(
-  "mongodb+srv://admin:bootcamp@cluster0.r28cs2c.mongodb.net/db_test?retryWrites=true&w=majority"
-);
+dbConnect()
 
-// requests
-app.use("/users", userRouter);
+//instanciar a variável que vai ficar responsável pelo nosso servidor -> app
+const app = express()
 
-// end of our app
-const PORT = 3001;
-app.listen(3001, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.use(cors( { origin: process.env.REACT_URL } ))
+app.use(express.json())
+
+// rotas
+
+
+app.listen(Number(process.env.PORT),
+    () => console.log(`server on port ${process.env.PORT}!'`))

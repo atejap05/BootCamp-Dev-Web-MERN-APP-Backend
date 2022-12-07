@@ -31,10 +31,10 @@ const userSchema = new Schema({
   passwordHash: { 
     type: String, 
     required: true },
+    match: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
   isAdmin: {
     type: Boolean, 
     required: true,
-    match: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
     default: false 
   },
 },

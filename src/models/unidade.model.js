@@ -12,6 +12,7 @@ const unidadeSchema = new Schema (
     },
     orgaoId: {
         type: Schema.Types.ObjectId,
+        ref:'Orgao',
         require:true
     },
     state: {

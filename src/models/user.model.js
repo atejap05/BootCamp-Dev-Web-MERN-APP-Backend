@@ -28,10 +28,10 @@ const userSchema = new Schema({
     ref: 'Unidade',
     required: false,
   },
-  passwordHash: { 
-    type: String, 
-    required: true },
-    match: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/,
+  passwordHash: {
+    type: String,
+    required: true,
+  },
   isAdmin: {
     type: Boolean, 
     required: true,
@@ -40,8 +40,7 @@ const userSchema = new Schema({
 },
 {
   timestamps: true,
-}
-);
+});
 
 
 const UserModel = model("User", userSchema);

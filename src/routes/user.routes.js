@@ -13,11 +13,26 @@ const getUser = async (req) => {
 }
 
 userRouter.post('/sign-up', async (req, res) => {
+    /* 	#swagger.tags = ['User']
+        #swagger.description = 'Endpoint to sign up a specific user'
+    */
+
+    /*	#swagger.parameters['body'] = {
+        in: 'body',
+        description: 'User to be registered',
+        required: true,
+        schema: { $ref: "#/definitions/RegisterUser" }}
+    */
+
+
     try {
 
         const user = await getUser(req)
 
         if (user) {
+            /* #swagger.responses[409] = {
+               description: "User already registered." }
+            */
             return res.status(409).json({msg: "e-mail já cadastrado"})
         }
 
@@ -38,14 +53,31 @@ userRouter.post('/sign-up', async (req, res) => {
         // Remove passwordHash property from object.
         delete newUser['_doc'].passwordHash;
 
+        /* #swagger.responses[201] = {
+           schema: { "$ref": "#/definitions/User" },
+           description: "User registered successfully." }
+        */
         return res.status(201).json(newUser);
     } catch (error) {
         console.log(error);
+        /* #swagger.responses[500] = {
+           description: "Registration error." }
+        */
         return res.status(500).json(error.errors);
     }
 })
 
 userRouter.post('/login', async (req, res) => {
+    /* 	#swagger.tags = ['User']
+        #swagger.description = 'Endpoint to sign in a specific user'
+    */
+
+    /*	#swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Email and password from user',
+        required: true,
+        schema: { $ref: "#/definitions/SignIn" }}
+    */
 
     try {
         const user = await getUser(req)
@@ -60,6 +92,10 @@ userRouter.post('/login', async (req, res) => {
             delete user['_doc'].passwordHash
             const token = generateToken(user)
 
+            /* #swagger.responses[200] = {
+               schema: { "$ref": "#/definitions/LoggedUser" },
+               description: "User signed in successfully." }
+            */
             return res.status(200).json({
                 user: {...user['_doc']},
                 token: token
@@ -71,9 +107,6 @@ userRouter.post('/login', async (req, res) => {
         console.log(error)
         return res.status(500).json({msg: 'algo deu errado no login'})
     }
-
-
 })
-
 
 export default userRouter

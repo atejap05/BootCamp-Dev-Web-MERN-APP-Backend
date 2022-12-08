@@ -2,6 +2,7 @@ import express from "express";
 import IntencaoModel from "../models/intencao.model.js";
 import isAuth from "../middlewares/isAuth.js";
 import UserModel from "../models/user.model.js";
+import UnidadeModel from "../models/unidade.model.js";
 
 const IntencaoRouter = express.Router();
 
@@ -13,7 +14,7 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
 
     /*	#swagger.parameters['body'] = {
         in: 'body',
-        description: 'Intecao to be registered',
+        description: 'Intencao to be registered',
         required: true,
         schema: { $ref: "#/definitions/Intencao" }}
     */
@@ -59,23 +60,34 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
     try{
 
         const allIntencoes = await IntencaoModel.find()
-        const ids = allIntencoes.map(intent => intent.userId)
-        const users = await UserModel.find({ '_id': { $in: ids } });
+        const userIds = allIntencoes.map(intent => intent.userId)
+        const unidadesOrigemIds = allIntencoes.map(intent => intent.origemId)
+        const unidadesDestinoIds = allIntencoes.map(intent => intent.destinoId)
 
-        const populatedIntents = [
+        const users = await UserModel.find({ '_id': { $in: userIds } });
+        const unidadesOrigem = await UnidadeModel.find({ '_id': { $in: unidadesOrigemIds } });
+        const unidadesDestino = await UnidadeModel.find({ '_id': { $in: unidadesDestinoIds } });
 
-        ]
+        const populatedIntents = []
 
         allIntencoes.forEach(intent => {
-            const user = users.find(user => {
-                return user._id.toString() === intent.userId.toString()
-            })
+
+            // Get user
+            const user = users.find(user => user._id.toString() === intent.userId.toString())
 
             delete user['_doc'].passwordHash
 
+            // get Unidade origem.
+            const unidadeOrigem = unidadesOrigem.find(u => u._id.toString() === intent.origemId.toString())
+            //console.log(unidadeOrigem)
+
+            // get Unidade destino.
+            const unidadeDestino = unidadesDestino.find(u => u._id.toString() === intent.destinoId.toString())
+            //console.log(unidadeDestino)
+
             populatedIntents.push({
-                origemId: intent.origemId,
-                destinoId: intent.destinoId,
+                unidadeOrigem,
+                unidadeDestino,
                 user
             })
         } )
@@ -83,7 +95,8 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
         return res.status(200).json(populatedIntents)
 
     } catch (error) {
-
+        console.log(error);
+        return res.status(400).json(error.errors)
     }
 })
 

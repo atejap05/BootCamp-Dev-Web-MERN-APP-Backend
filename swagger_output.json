@@ -46,7 +46,7 @@
           {
             "name": "body",
             "in": "body",
-            "description": "Intecao to be registered",
+            "description": "Intencao to be registered",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Intencao"
@@ -80,10 +80,37 @@
         }
       }
     },
-    "/create": {
-      "post": {
-        "description": "",
+    "/intencao/all": {
+      "get": {
+        "tags": [
+          "Intencao"
+        ],
+        "description": "Endpoint to get all\"intenção\"",
         "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/orgao/create": {
+      "post": {
+        "tags": [
+          "Orgao"
+        ],
+        "description": "Endpoint to create an \"Orgao\"",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Orgao to be registered",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Orgao"
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -94,9 +121,12 @@
         }
       }
     },
-    "/": {
+    "/orgao/": {
       "get": {
-        "description": "",
+        "tags": [
+          "Orgao"
+        ],
+        "description": "Endpoint to get a list of all \"Orgao\"",
         "parameters": [],
         "responses": {
           "200": {
@@ -108,15 +138,19 @@
         }
       }
     },
-    "/{id}": {
+    "/orgao/{id}": {
       "get": {
-        "description": "",
+        "tags": [
+          "Orgao"
+        ],
+        "description": "Endpoint to get one specific \"Orgao\"",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Orgao ID."
           }
         ],
         "responses": {
@@ -129,15 +163,19 @@
         }
       }
     },
-    "/delete/{id}": {
+    "/orgao/delete/{id}": {
       "delete": {
-        "description": "",
+        "tags": [
+          "Orgao"
+        ],
+        "description": "Endpoint to delete one specific \"Orgao\"",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Orgao ID."
           }
         ],
         "responses": {
@@ -153,15 +191,28 @@
         }
       }
     },
-    "/update/{id}": {
+    "/orgao/update/{id}": {
       "put": {
-        "description": "",
+        "tags": [
+          "Orgao"
+        ],
+        "description": "Endpoint to update one specific \"Orgao\" info",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Orgao ID."
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Orgao to be deleted",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Orgao"
+            }
           }
         ],
         "responses": {
@@ -226,7 +277,7 @@
         "tags": [
           "Unidade"
         ],
-        "description": "Endpoint to get an specific \"Unidade\"",
+        "description": "Endpoint to get a specific \"Unidade\"",
         "parameters": [
           {
             "name": "id",
@@ -239,6 +290,69 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/unidade/delete/:id": {
+      "delete": {
+        "tags": [
+          "Unidade"
+        ],
+        "description": "Endpoint to get a specific \"Unidade\"",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unidade ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Unidade"
+        ],
+        "description": "Endpoint to get a specific \"Unidade\"",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unidade ID.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Unidade to be deleted",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Unidade"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -335,9 +449,12 @@
         }
       }
     },
-    "/change-password": {
+    "/user/change-password": {
       "put": {
-        "description": "",
+        "tags": [
+          "User"
+        ],
+        "description": "Change user password",
         "parameters": [
           {
             "name": "body",
@@ -433,7 +550,7 @@
           "type": "string",
           "example": "7392dg9k1985cc4f9a08722d"
         },
-        "user": {
+        "userId": {
           "type": "string",
           "example": "3478fd9d1454gg4f9b07690e"
         }

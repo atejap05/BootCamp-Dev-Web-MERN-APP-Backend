@@ -5,7 +5,7 @@ import isAdmin from "../middlewares/isAdmin.js";
 
 const UnidadeRouter = express.Router();
 
-UnidadeRouter.post('/create', isAuth, isAdmin, async (req,res) => {
+UnidadeRouter.post('/create', isAuth, isAdmin, async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']
         #swagger.path = '/unidade/create'
@@ -21,7 +21,7 @@ UnidadeRouter.post('/create', isAuth, isAdmin, async (req,res) => {
 
     try {
         const newUnidade = await UnidadeModel.create(req.body)
-        
+
         return res.status(201).json(newUnidade);
     } catch (error) {
         console.log(error);
@@ -30,7 +30,7 @@ UnidadeRouter.post('/create', isAuth, isAdmin, async (req,res) => {
 
 })
 
-UnidadeRouter.get('/', isAuth, async (req,res) => {
+UnidadeRouter.get('/', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']
         #swagger.path = '/unidade/'
@@ -48,11 +48,11 @@ UnidadeRouter.get('/', isAuth, async (req,res) => {
 
 })
 
-UnidadeRouter.get('/:id', isAuth, async (req,res) => {
+UnidadeRouter.get('/:id', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']
         #swagger.path = '/unidade/:id'
-        #swagger.description = 'Endpoint to get an specific "Unidade"'
+        #swagger.description = 'Endpoint to get a specific "Unidade"'
     */
 
     /*  #swagger.parameters['id'] = {
@@ -64,10 +64,10 @@ UnidadeRouter.get('/:id', isAuth, async (req,res) => {
 
     try {
 
-        const { id } = req.params;
+        const {id} = req.params;
 
         const unidade = await UnidadeModel.findById(id).populate("orgaoId");
-        
+
         return res.status(200).json(unidade);
     } catch (error) {
         console.log(error);
@@ -76,17 +76,29 @@ UnidadeRouter.get('/:id', isAuth, async (req,res) => {
 
 })
 
-UnidadeRouter.delete('/delete/:id', isAuth, async (req,res) => {
+UnidadeRouter.delete('/delete/:id', isAuth, isAdmin, async (req, res) => {
+
+    /* 	#swagger.tags = ['Unidade']
+        #swagger.path = '/unidade/delete/:id'
+        #swagger.description = 'Endpoint to get a specific "Unidade"'
+    */
+
+    /*  #swagger.parameters['id'] = {
+            in: 'path',
+            description: 'Unidade ID.',
+            required: true
+        }
+    */
 
     try {
 
-        const { id } = req.params;
+        const {id} = req.params;
 
         const deletedUnidade = await UnidadeModel.findByIdAndDelete(id);
-        
+
         if (!deletedUnidade) {
-            return res.status(400).json({ msg: "Unidade não encontrada!" });
-          }
+            return res.status(400).json({msg: "Unidade não encontrada!"});
+        }
 
         return res.status(200).json(deletedUnidade);
     } catch (error) {
@@ -96,20 +108,39 @@ UnidadeRouter.delete('/delete/:id', isAuth, async (req,res) => {
 
 })
 
-UnidadeRouter.put('/update/:id', isAuth,  async (req,res) => {
+UnidadeRouter.put('/update/:id', isAuth, isAdmin, async (req, res) => {
+
+    /* 	#swagger.tags = ['Unidade']
+        #swagger.path = '/unidade/delete/:id'
+        #swagger.description = 'Endpoint to get a specific "Unidade"'
+    */
+
+    /*  #swagger.parameters['id'] = {
+            in: 'path',
+            description: 'Unidade ID.',
+            required: true
+        }
+    */
+
+    /*	#swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Unidade to be deleted',
+        required: true,
+        schema: { $ref: "#/definitions/Unidade" }}
+    */
 
     try {
 
-        const { id } = req.params;
+        const {id} = req.params;
 
         const updatedUnidade = await UnidadeModel.findByIdAndUpdate(
             id,
             {...req.body},
-            {new:true , runValidators:true});
-        
+            {new: true, runValidators: true});
+
         if (!updatedUnidade) {
-            return res.status(400).json({ msg: "Unidade não encontrada!" });
-          }
+            return res.status(400).json({msg: "Unidade não encontrada!"});
+        }
 
 
         return res.status(200).json(updatedUnidade);

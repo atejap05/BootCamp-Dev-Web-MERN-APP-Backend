@@ -147,6 +147,11 @@ userRouter.get('/all', isAuth, async (req, res) => {
 })
 
 userRouter.put('/change-password', async (req, res) => {
+    /* 	#swagger.tags = ['User']
+        #swagger.path = '/user/change-password'
+        #swagger.description = 'Change user password'
+    */
+
     try {
 
         const {_id} = req.body

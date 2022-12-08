@@ -3,6 +3,10 @@ import * as dotenv from 'dotenv'
 import dbConnect from './config/db.config.js'
 import cors from 'cors'
 import userRouter from './routes/user.routes.js'
+import intencaoRouter from './routes/intencao.routes.js'
+import orgaoRouter from './routes/orgao.routes.js'
+import unidadeRouter from './routes/unidade.routes.js'
+
 
 //habilitar o servidor a ter variáveis de ambiente
 dotenv.config()
@@ -17,6 +21,9 @@ app.use(express.json())
 
 // rotas
 app.use('/user', userRouter)
+app.use('/intencao', intencaoRouter)
+app.use('/orgao', orgaoRouter)
+app.use('/unidade', unidadeRouter)
 
 app.listen(Number(process.env.PORT),
     () => console.log(`server on port ${process.env.PORT}!'`))

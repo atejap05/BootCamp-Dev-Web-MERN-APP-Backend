@@ -1,9 +1,23 @@
 import express from "express";
 import UnidadeModel from "../models/unidade.model.js"
+import isAuth from "../middlewares/isAuth.js";
+import isAdmin from "../middlewares/isAdmin.js";
 
-const unidadeRoute = express.Router();
+const UnidadeRouter = express.Router();
 
-unidadeRoute.post('/create', async (req,res) => {
+UnidadeRouter.post('/create', isAuth, isAdmin, async (req,res) => {
+
+    /* 	#swagger.tags = ['Unidade']
+        #swagger.path = '/unidade/create'
+        #swagger.description = 'Endpoint to include an "Unidade"'
+    */
+
+    /*	#swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Unidade to be registered',
+        required: true,
+        schema: { $ref: "#/definitions/Unidade" }}
+    */
 
     try {
         const newUnidade = await UnidadeModel.create(req.body)
@@ -16,12 +30,17 @@ unidadeRoute.post('/create', async (req,res) => {
 
 })
 
-unidadeRoute.get('/', async (req,res) => {
+UnidadeRouter.get('/', isAuth, async (req,res) => {
+
+    /* 	#swagger.tags = ['Unidade']
+        #swagger.path = '/unidade/'
+        #swagger.description = 'Endpoint to get all "Unidade"'
+    */
 
     try {
         const allUnidades = await UnidadeModel.find()
-        
         return res.status(200).json(allUnidades);
+
     } catch (error) {
         console.log(error);
         return res.status(500).json(error.errors)
@@ -29,7 +48,19 @@ unidadeRoute.get('/', async (req,res) => {
 
 })
 
-unidadeRoute.get('/:id', async (req,res) => {
+UnidadeRouter.get('/:id', isAuth, async (req,res) => {
+
+    /* 	#swagger.tags = ['Unidade']
+        #swagger.path = '/unidade/:id'
+        #swagger.description = 'Endpoint to get an specific "Unidade"'
+    */
+
+    /*  #swagger.parameters['id'] = {
+            in: 'path',
+            description: 'Unidade ID.',
+            required: true
+        }
+    */
 
     try {
 
@@ -45,7 +76,7 @@ unidadeRoute.get('/:id', async (req,res) => {
 
 })
 
-unidadeRoute.delete('/delete/:id', async (req,res) => {
+UnidadeRouter.delete('/delete/:id', isAuth, async (req,res) => {
 
     try {
 
@@ -65,7 +96,7 @@ unidadeRoute.delete('/delete/:id', async (req,res) => {
 
 })
 
-unidadeRoute.put('/update/:id', async (req,res) => {
+UnidadeRouter.put('/update/:id', isAuth,  async (req,res) => {
 
     try {
 
@@ -89,4 +120,4 @@ unidadeRoute.put('/update/:id', async (req,res) => {
 
 })
 
-export default unidadeRoute;
+export default UnidadeRouter;

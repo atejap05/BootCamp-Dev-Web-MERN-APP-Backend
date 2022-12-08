@@ -21,8 +21,20 @@ const doc = {
     tags: [
         {
             "name": "User",
-            "description": "Endpoints"
-        }
+            "description": "User Endpoints"
+        },
+        {
+            "name": "Intencao",
+            "description": "Intencao Endpoints"
+        },
+        {
+            "name": "Orgao",
+            "description": "Orgao Endpoints"
+        },
+        {
+            "name": "Unidade",
+            "description": "Unidade Endpoints"
+        },
     ],
     definitions: {
         // Parents: {
@@ -49,6 +61,11 @@ const doc = {
             //     $ref: '#/definitions/Parents'
             // },
         },
+        Intencao: {
+            origemId: "6390fd9d1814bb4f9a02833c",
+            destinoId: "7392dg9k1985cc4f9a08722d",
+            userId: "3478fd9d1454gg4f9b07690e"
+        },
         RegisterUser: {
             $name: "José da Silva",
             $cpf: 12345678912,
@@ -58,6 +75,18 @@ const doc = {
         SignIn: {
             $email: "emailusuario@provedor.com",
             $password: "SenhaValida75!"
+        },
+        Unidade: {
+            name: "Delegacia da Receita Federal",
+            sigla: "DRF",
+            state: "MT",
+            city: "Cuiabá",
+            orgaoId: "6390fd9d1814bb4f9a02833c"
+        },
+        Orgao: {
+            name: "Secretaria da Receita Federal do Brasil",
+            sigla: 'SRFB',
+            _id: "3478fd9d1454gg4f9b07690e"
         }
     }
 }

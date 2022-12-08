@@ -10,7 +10,19 @@
   "tags": [
     {
       "name": "User",
-      "description": "Endpoints"
+      "description": "User Endpoints"
+    },
+    {
+      "name": "Intencao",
+      "description": "Intencao Endpoints"
+    },
+    {
+      "name": "Orgao",
+      "description": "Orgao Endpoints"
+    },
+    {
+      "name": "Unidade",
+      "description": "Unidade Endpoints"
     }
   ],
   "schemes": [
@@ -24,6 +36,216 @@
     "application/json"
   ],
   "paths": {
+    "/intencao/create": {
+      "post": {
+        "tags": [
+          "Intencao"
+        ],
+        "description": "Endpoint to create an \"intenção\"",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Intecao to be registered",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Intencao"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/intencao/delete": {
+      "delete": {
+        "tags": [
+          "Intencao"
+        ],
+        "description": "Endpoint to delete an \"intenção\"",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/create": {
+      "post": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/{id}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/delete/{id}": {
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/update/{id}": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/unidade/create": {
+      "post": {
+        "tags": [
+          "Unidade"
+        ],
+        "description": "Endpoint to include an \"Unidade\"",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Unidade to be registered",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Unidade"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/unidade/": {
+      "get": {
+        "tags": [
+          "Unidade"
+        ],
+        "description": "Endpoint to get all \"Unidade\"",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/unidade/:id": {
+      "get": {
+        "tags": [
+          "Unidade"
+        ],
+        "description": "Endpoint to get an specific \"Unidade\"",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unidade ID.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/user/sign-up": {
       "post": {
         "tags": [
@@ -112,6 +334,42 @@
           }
         }
       }
+    },
+    "/change-password": {
+      "put": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User registered successfully.",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -164,6 +422,23 @@
         }
       }
     },
+    "Intencao": {
+      "type": "object",
+      "properties": {
+        "origemId": {
+          "type": "string",
+          "example": "6390fd9d1814bb4f9a02833c"
+        },
+        "destinoId": {
+          "type": "string",
+          "example": "7392dg9k1985cc4f9a08722d"
+        },
+        "user": {
+          "type": "string",
+          "example": "3478fd9d1454gg4f9b07690e"
+        }
+      }
+    },
     "RegisterUser": {
       "type": "object",
       "properties": {
@@ -207,6 +482,48 @@
         "email",
         "password"
       ]
+    },
+    "Unidade": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Delegacia da Receita Federal"
+        },
+        "sigla": {
+          "type": "string",
+          "example": "DRF"
+        },
+        "state": {
+          "type": "string",
+          "example": "MT"
+        },
+        "city": {
+          "type": "string",
+          "example": "Cuiabá"
+        },
+        "orgaoId": {
+          "type": "string",
+          "example": "6390fd9d1814bb4f9a02833c"
+        }
+      }
+    },
+    "Orgao": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "example": "Secretaria da Receita Federal do Brasil"
+        },
+        "sigla": {
+          "type": "string",
+          "example": "SRFB"
+        },
+        "_id": {
+          "type": "string",
+          "example": "3478fd9d1454gg4f9b07690e"
+        }
+      }
     }
   }
 }

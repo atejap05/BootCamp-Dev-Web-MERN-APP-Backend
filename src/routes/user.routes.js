@@ -148,15 +148,11 @@ userRouter.get('/all', isAuth, async (req, res) => {
 
 userRouter.put('/change-password', async (req, res) => {
     try {
+
         const {_id} = req.body
-        const {password} = req.body;
-        console.log(password)
-        console.log(req.body)
         const hashedPassword = await generateHashedPassword(req, res)
 
-        console.log(hashedPassword)
-
-        const user = await UserModel.findOneAndUpdate({_id : _id}, {hashedPassword: hashedPassword})
+        const user = await UserModel.findOneAndUpdate({_id : _id}, {passwordHash: hashedPassword}, { new: true, runValidators: true })
 
         console.log(user)
 

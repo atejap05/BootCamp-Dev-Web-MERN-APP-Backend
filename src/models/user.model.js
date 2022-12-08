@@ -28,9 +28,9 @@ const userSchema = new Schema({
     ref: 'Unidade',
     required: false,
   },
-  passwordHash: {
-    type: String,
-    required: true,
+  passwordHash: { 
+    type: String, 
+    required: true
   },
   isAdmin: {
     type: Boolean, 

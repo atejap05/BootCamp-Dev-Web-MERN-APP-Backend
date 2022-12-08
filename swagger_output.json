@@ -24,7 +24,7 @@
     "application/json"
   ],
   "paths": {
-    "/sign-up": {
+    "/user/sign-up": {
       "post": {
         "tags": [
           "User"
@@ -60,7 +60,7 @@
         }
       }
     },
-    "/login": {
+    "/user/sign-in": {
       "post": {
         "tags": [
           "User"
@@ -89,6 +89,23 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/all": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get a list of all users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Returns an array of users"
           },
           "500": {
             "description": "Internal Server Error"

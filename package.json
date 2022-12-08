@@ -4,7 +4,8 @@
   "description": "MERN App Server side",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon src/server.js"
+    "start": "nodemon src/server.js",
+    "swagger-autogen": "node swagger.js"
   },
   "keywords": [],
   "author": "Joel Alves Pereira",
@@ -16,10 +17,12 @@
     "express": "^4.18.2",
     "express-jwt": "^7.7.7",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.6.7"
+    "mongoose": "^6.6.7",
+    "swagger-ui-express": "^4.6.0"
   },
   "type": "module",
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "swagger-autogen": "^2.22.0"
   }
 }

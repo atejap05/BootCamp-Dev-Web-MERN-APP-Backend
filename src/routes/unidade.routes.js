@@ -48,6 +48,26 @@ UnidadeRouter.get('/', isAuth, async (req, res) => {
 
 })
 
+UnidadeRouter.get('/:sigla', isAuth, async (req, res) => {
+
+    /* 	#swagger.tags = ['Unidade']
+        #swagger.path = '/unidade/{sigla}'
+        #swagger.description = 'Endpoint to get all "Unidade" from a specific state'
+    */
+
+    const {sigla} = req.params;
+
+    try {
+        const allUnidades = await UnidadeModel.find({state: sigla})
+        return res.status(200).json(allUnidades);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.errors)
+    }
+
+})
+
 UnidadeRouter.get('/:id', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']

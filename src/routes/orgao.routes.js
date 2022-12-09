@@ -1,10 +1,12 @@
 import express from "express";
 import OrgaoModel from "../models/orgao.model.js"
 import UnidadeModel from "../models/orgao.model.js"
+import isAuth from "../middlewares/isAuth.js";
+import isAdmin from "../middlewares/isAdmin.js";
 
 const orgaoRoute = express.Router();
 
-orgaoRoute.post('/create', async (req, res) => {
+orgaoRoute.post('/create', isAuth, isAdmin, async (req, res) => {
 
     /* 	#swagger.tags = ['Orgao']
         #swagger.path = '/orgao/create'
@@ -29,7 +31,7 @@ orgaoRoute.post('/create', async (req, res) => {
 
 })
 
-orgaoRoute.get('/', async (req, res) => {
+orgaoRoute.get('/', isAuth,async (req, res) => {
 
     /* 	#swagger.tags = ['Orgao']
         #swagger.path = '/orgao/'
@@ -48,7 +50,7 @@ orgaoRoute.get('/', async (req, res) => {
 
 })
 
-orgaoRoute.get('/:id', async (req, res) => {
+orgaoRoute.get('/:id', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Orgao']
         #swagger.path = '/orgao/{id}'
@@ -76,7 +78,7 @@ orgaoRoute.get('/:id', async (req, res) => {
 
 })
 
-orgaoRoute.delete('/delete/:id', async (req, res) => {
+orgaoRoute.delete('/delete/:id', isAuth, isAdmin, async (req, res) => {
 
     /* 	#swagger.tags = ['Orgao']
         #swagger.path = '/orgao/delete/{id}'
@@ -110,7 +112,7 @@ orgaoRoute.delete('/delete/:id', async (req, res) => {
 
 })
 
-orgaoRoute.put('/update/:id', async (req, res) => {
+orgaoRoute.put('/update/:id', isAuth, isAdmin, async (req, res) => {
 
     /* 	#swagger.tags = ['Orgao']
         #swagger.path = '/orgao/update/{id}'

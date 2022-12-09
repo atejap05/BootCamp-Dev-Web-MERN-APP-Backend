@@ -5,7 +5,8 @@ import cors from 'cors'
 import userRouter from './routes/user.routes.js'
 import orgaoRouter from './routes/orgao.routes.js'
 import UnidadeRouter from './routes/unidade.routes.js'
-import intencaoRouter from "./routes/intencao.routes.js";
+import intencaoRouter from "./routes/intencao.routes.js"
+import stateRouter from "./routes/state.routes.js"
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from '../swagger_output.json' assert { type : "json"}
 
@@ -27,7 +28,7 @@ app.use('/user', userRouter)
 app.use('/intencao', intencaoRouter)
 app.use('/orgao', orgaoRouter)
 app.use('/unidade', UnidadeRouter)
-
+app.use('/state', stateRouter)
 app.use('/doc', swaggerUi.serve)
 app.get('/doc', swaggerUi.setup(swaggerFile))
 

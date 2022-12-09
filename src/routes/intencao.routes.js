@@ -15,7 +15,7 @@ intencaoRoute.post('/create', async (req,res) => {
         console.log(error);
         return res.status(400).json(error.errors);
     }
-})
+});
 
 intencaoRoute.delete('/delete', async (req, res) =>{
    try {
@@ -28,5 +28,18 @@ intencaoRoute.delete('/delete', async (req, res) =>{
    } 
 }
 );
+
+intencaoRoute.get('/', async (req,res) => {
+    try {
+        //Verificar como o será passado o usuário logado e sua unidade
+        const allIntencoes = await IntencaoModel.find()
+
+        return res.status(200).json(allIntencoes);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.errors);
+    }
+})
 
 export default intencaoRoute;

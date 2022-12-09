@@ -17,9 +17,11 @@ intencaoRoute.post('/create', async (req,res) => {
     }
 });
 
-intencaoRoute.delete('/delete', async (req, res) =>{
+intencaoRoute.delete('/delete/:id', async (req, res) =>{
    try {
-    const deletedIntencao = await IntencaoModel.findByIdAndDelete(req._id);
+    const { id } = req.params;
+
+    const deletedIntencao = await IntencaoModel.findByIdAndDelete(id);
     return res.status(200).json(deletedIntencao);
     
    } catch (error) {
@@ -40,6 +42,20 @@ intencaoRoute.get('/', async (req,res) => {
         console.log(error);
         return res.status(400).json(error.errors);
     }
-})
+});
+
+intencaoRoute.get('/:id', async (req,res) => {
+    try {
+        const { id } = req.params;
+        //Verificar como o será passado o usuário logado e sua unidade
+        const allIntencoes = await IntencaoModel.findById(id)
+
+        return res.status(200).json(allIntencoes);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.errors);
+    }
+});
 
 export default intencaoRoute;

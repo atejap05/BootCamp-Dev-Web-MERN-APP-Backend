@@ -29,26 +29,37 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
         console.log(error);
         return res.status(400).json(error.errors);
     }
-})
+});
 
-IntencaoRouter.delete('/delete', isAuth, async (req, res) => {
-
-        /* 	#swagger.tags = ['Intencao']
+IntencaoRouter.delete('/delete/:id', isAuth, async (req, res) =>{
+   try {
+    /* 	#swagger.tags = ['Intencao']
             #swagger.path = '/intencao/delete'
             #swagger.description = 'Endpoint to delete an "intenção"'
         */
-
-
-        try {
-            const deletedIntencao = await IntencaoModel.findByIdAndDelete(req._id);
-            return res.status(200).json(deletedIntencao);
-
-        } catch (error) {
-            console.log(error);
-            return res.status(400).json(error.errors)
-        }
-    }
+    const { id } = req.params;   
+    const deletedIntencao = await IntencaoModel.findByIdAndDelete(id);
+    return res.status(200).json(deletedIntencao);
+    
+   } catch (error) {
+    console.log(error);
+    return res.status(400).json(error.errors)
+   } 
+}
 );
+
+IntencaoRouter.get('/all', isAuth, async (req,res) => {
+    try {
+        //Verificar como o será passado o usuário logado e sua unidade
+        const allIntencoes = await IntencaoModel.find()
+
+        return res.status(200).json(allIntencoes);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.errors);
+    }
+});
 
 IntencaoRouter.get('/all', isAuth, async (req, res) => {
 
@@ -98,7 +109,20 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
         console.log(error);
         return res.status(400).json(error.errors)
     }
-})
+});
 
+IntencaoRouter.get('/:id', async (req,res) => {
+    try {
+        const { id } = req.params;
+        //Verificar como o será passado o usuário logado e sua unidade
+        const allIntencoes = await IntencaoModel.findById(id)
+
+        return res.status(200).json(allIntencoes);
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.errors);
+    }
+});
 
 export default IntencaoRouter;

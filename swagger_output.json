@@ -97,6 +97,56 @@
         }
       }
     },
+    "/intencao/byUser/{userId}": {
+      "get": {
+        "tags": [
+          "Intencao"
+        ],
+        "description": "Endpoint to get all \"intenção\" per user",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "User ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/intencao/{id}": {
+      "get": {
+        "tags": [
+          "Intencao"
+        ],
+        "description": "Endpoint to get a \"intenção\" by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Intecao ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/orgao/create": {
       "post": {
         "tags": [

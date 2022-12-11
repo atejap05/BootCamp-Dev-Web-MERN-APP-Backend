@@ -109,6 +109,19 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
 });
 
 IntencaoRouter.get('/byUser/:userId', async (req,res) => {
+
+    /* 	#swagger.tags = ['Intencao']
+        #swagger.path = '/intencao/byUser/{userId}'
+        #swagger.description = 'Endpoint to get all "intenção" per user'
+    */
+
+    /*  #swagger.parameters['userId'] = {
+            in: 'path',
+            description: 'User ID.',
+            required: true
+        }
+    */
+
     try {
         const { userId } = req.params;
         //Verificar como o será passado o usuário logado e sua unidade
@@ -123,6 +136,19 @@ IntencaoRouter.get('/byUser/:userId', async (req,res) => {
 });
 
 IntencaoRouter.get('/:id', isAuth, async (req,res) => {
+
+    /* 	#swagger.tags = ['Intencao']
+        #swagger.path = '/intencao/{id}'
+        #swagger.description = 'Endpoint to get a "intenção" by id'
+    */
+
+    /*  #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'Intecao ID.',
+        required: true
+    }
+*/
+
     try {
         const { id } = req.params;
         //Verificar como o será passado o usuário logado e sua unidade

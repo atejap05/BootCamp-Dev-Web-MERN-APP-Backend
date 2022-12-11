@@ -128,7 +128,7 @@ userRouter.get('/all', isAuth, async (req, res) => {
     // TODO: implementar a busca das intenções de movimentação.
     try {
 
-        const users = await UserModel.find();
+        const users = await UserModel.find()
 
         /* #swagger.responses[200] = {
            description: "Returns an array of users" }

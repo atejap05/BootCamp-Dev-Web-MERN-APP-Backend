@@ -30,15 +30,17 @@ UnidadeRouter.post('/create', isAuth, isAdmin, async (req, res) => {
 
 })
 
-UnidadeRouter.get('/', isAuth, async (req, res) => {
+UnidadeRouter.get('/byOrgao', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']
-        #swagger.path = '/unidade/'
+        #swagger.path = '/unidade/byOrgao'
         #swagger.description = 'Endpoint to get all "Unidade"'
     */
 
+    const orgaoId = req.query.orgaoId
+
     try {
-        const allUnidades = await UnidadeModel.find()
+        const allUnidades = await UnidadeModel.find({orgaoId: orgaoId})
         return res.status(200).json(allUnidades);
 
     } catch (error) {
@@ -48,17 +50,18 @@ UnidadeRouter.get('/', isAuth, async (req, res) => {
 
 })
 
-UnidadeRouter.get('/:sigla', isAuth, async (req, res) => {
+UnidadeRouter.get('/porEstado/:sigla', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']
-        #swagger.path = '/unidade/{sigla}'
+        #swagger.path = '/unidade/porEstado/{sigla}'
         #swagger.description = 'Endpoint to get all "Unidade" from a specific state'
     */
 
     const {sigla} = req.params;
+    const orgaoId = req.query.orgaoId
 
     try {
-        const allUnidades = await UnidadeModel.find({state: sigla})
+        const allUnidades = await UnidadeModel.find({state: sigla, orgaoId: orgaoId})
         return res.status(200).json(allUnidades);
 
     } catch (error) {
@@ -85,8 +88,7 @@ UnidadeRouter.get('/:id', isAuth, async (req, res) => {
     try {
 
         const {id} = req.params;
-
-        const unidade = await UnidadeModel.findById(id).populate("orgaoId");
+        const unidade = await UnidadeModel.findById(id);
 
         return res.status(200).json(unidade);
     } catch (error) {

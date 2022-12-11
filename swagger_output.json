@@ -286,13 +286,19 @@
         }
       }
     },
-    "/unidade/": {
+    "/unidade/byOrgao": {
       "get": {
         "tags": [
           "Unidade"
         ],
         "description": "Endpoint to get all \"Unidade\"",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "orgaoId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -303,7 +309,7 @@
         }
       }
     },
-    "/unidade/{sigla}": {
+    "/unidade/porEstado/{sigla}": {
       "get": {
         "tags": [
           "Unidade"
@@ -314,6 +320,11 @@
             "name": "sigla",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgaoId",
+            "in": "query",
             "type": "string"
           }
         ],

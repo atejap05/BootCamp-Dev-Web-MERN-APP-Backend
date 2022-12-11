@@ -110,7 +110,7 @@ userRouter.post('/sign-in', async (req, res) => {
                 token: token
             })
         } else {
-            return res.status(401).json({msg: 'senha e e-mail não está correta'})
+            return res.status(401).json({msg: 'senha ou e-mail incorretos'})
         }
     } catch (error) {
         console.log(error)

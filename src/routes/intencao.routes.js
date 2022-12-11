@@ -99,8 +99,12 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
     try{
 
         const allIntencoes = await IntencaoModel.find()
-        const resposta = await populateIntencoes(allIntencoes)
-        return res.status(200).json(resposta)
+        .populate({path:"userId", select: {passwordHash: 0}, populate: {path:"unidadeId"}})
+        .populate({path:"userId", select: {passwordHash: 0}, populate: {path:"orgaoId"}})
+    .populate({path:"origemId", populate:{path:"orgaoId"}})
+    .populate({path:"destinoId", populate:{path:"orgaoId"}})
+        // const resposta = await populateIntencoes(allIntencoes)
+        return res.status(200).json(allIntencoes)
 
     } catch (error) {
         console.log(error);

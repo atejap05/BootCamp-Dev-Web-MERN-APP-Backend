@@ -5,6 +5,16 @@ import isAuth from "../middlewares/isAuth.js";
 const IntencaoRouter = express.Router();
 
 
+const populateIntencao = async (userId) => {
+
+    return IntencaoModel.find(userId)
+        .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
+        .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
+        .populate({path: "origemId", populate: {path: "orgaoId"}})
+        .populate({path: "destinoId", populate: {path: "orgaoId"}})
+
+}
+
 IntencaoRouter.post('/create', isAuth, async (req, res) => {
     /* 	#swagger.tags = ['Intencao']
         #swagger.path = '/intencao/create'
@@ -57,11 +67,7 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
 
     try {
 
-        const allIntencoes = await IntencaoModel.find()
-            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
-            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
-            .populate({path: "origemId", populate: {path: "orgaoId"}})
-            .populate({path: "destinoId", populate: {path: "orgaoId"}})
+        const allIntencoes = await populateIntencao();
         // const resposta = await populateIntencoes(allIntencoes)
         return res.status(200).json(allIntencoes)
 
@@ -88,11 +94,7 @@ IntencaoRouter.get('/byUser/:userId', async (req, res) => {
     try {
         const {userId} = req.params;
         //Verificar como o será passado o usuário logado e sua unidade
-        const allIntencoes = await IntencaoModel.find({userId})
-            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
-            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
-            .populate({path: "origemId", populate: {path: "orgaoId"}})
-            .populate({path: "destinoId", populate: {path: "orgaoId"}})
+        const allIntencoes = await populateIntencao({userId})
         return res.status(200).json(allIntencoes)
 
     } catch (error) {

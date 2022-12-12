@@ -9,7 +9,8 @@ const saltRounds = 10;
 
 const getUser = async req => {
     const {email} = req.body;
-    return UserModel.findOne({email: email});
+    return UserModel.findOne({email: email})
+    .populate("unidadeId").populate("orgaoId");
 
 }
 

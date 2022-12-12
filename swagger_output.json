@@ -281,9 +281,12 @@
         }
       }
     },
-    "/create": {
+    "/state/create": {
       "post": {
-        "description": "",
+        "tags": [
+          "State"
+        ],
+        "description": "Endpoint to create a \"State\"",
         "parameters": [],
         "responses": {
           "201": {
@@ -295,9 +298,12 @@
         }
       }
     },
-    "/all": {
+    "/state/all": {
       "get": {
-        "description": "",
+        "tags": [
+          "State"
+        ],
+        "description": "Endpoint to create a \"State\"",
         "parameters": [],
         "responses": {
           "200": {

@@ -60,8 +60,13 @@ UnidadeRouter.get('/porEstado/:sigla', isAuth, async (req, res) => {
     const {sigla} = req.params;
     const orgaoId = req.query.orgaoId
 
+    const filter = {}
+    filter['state'] = sigla
+
+    if (orgaoId) filter['orgaoId'] = orgaoId
+
     try {
-        const allUnidades = await UnidadeModel.find({state: sigla, orgaoId: orgaoId})
+        const allUnidades = await UnidadeModel.find(filter)
         return res.status(200).json(allUnidades);
 
     } catch (error) {

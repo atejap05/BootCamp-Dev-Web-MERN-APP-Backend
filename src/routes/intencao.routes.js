@@ -18,6 +18,7 @@ const transporter = nodemailer.createTransport({
 
 const populateIntencao = async (userId) => {
 
+
     return IntencaoModel.find(userId)
         .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
         .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
@@ -89,9 +90,14 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
         #swagger.description = 'Endpoint to get all"intenção"'
     */
 
+    const filter = {}
+
+    if (req.query.state) filter['state'] = req.query.state
+    if (req.query.destinoId) filter['destinoId'] = req.query.destinoId
+
     try {
 
-        const allIntencoes = await populateIntencao();
+        const allIntencoes = await populateIntencao(filter);
         // const resposta = await populateIntencoes(allIntencoes)
         return res.status(200).json(allIntencoes)
 

@@ -46,16 +46,53 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
 
         //Envio de email confirmando a inclusao de nova intencao
         const user = await UserModel.findById(req.body.userId)
-        const mailOptions = {
-            from: process.env.EMAIL,
-            to: user.email,
-            subject: "Inclusão de intenção de permuta confirmada",
-            html: `
-                <p>${user.name},</p>
-                <p>Confirmamos a inclusão da sua intenção de permuta.</p>
-            `
-        };
-        await transporter.sendMail(mailOptions);
+        
+        const matchPermuta = await IntencaoModel
+            .find({
+                origemId: req.body.destinoId,
+                destinoId: req.body.origemId
+            })
+            .populate({path: 'userId', select: ['name', 'email']})
+            .populate({path: 'origemId', select: 'name'})
+            .populate({path: 'destinoId', select: 'name'})
+
+        if (matchPermuta.length === 0) {
+            const message =
+                `No momento, não consta em nossa base de dados intenção de remoção que viabilize a permuta.
+                Caso seja incluída intenção que a viabilize, você será comunicado.`
+                console.log(message);
+        } else {
+            matchPermuta.forEach((match)=>{
+                const messageCurrentUser =
+                    `${user.name},
+                    Consta da nossa base da dados que o servidor ${match.userId.name}
+                    está lotado no(a) ${match.origemId.name} e 
+                    tem interesse de remover-se para ${match.destinoId.name}.
+                    Seu e-mail para contato é ${match.userId.email}.`
+                console.log(messageCurrentUser);
+                // const mailOptions = {
+                //     from: process.env.EMAIL,
+                //     to: user.email,
+                //     subject: "Inclusão de intenção de permuta confirmada",
+                //     txt: messageCurrentUser
+                // };
+                // await transporter.sendMail(mailOptions);
+
+                const messageMatchedUser =
+                    `${match.userId.name},
+                    O sevidor ${user.name} registrou interesse em remover-se do(a) ${match.origemId.name}
+                    para ${match.origemId.name}.
+                    Seu e-mail para contato é ${user.email}.`
+                console.log(messageMatchedUser);
+                // const mailOptions = {
+                //     from: process.env.EMAIL,
+                //     to: match.userId.name,
+                //     subject: "Inclusão de intenção de permuta confirmada",
+                //     txt: messageCurrentUser
+                // };
+                // await transporter.sendMail(mailOptions);
+            });
+        }
         
         return res.status(201).json(newIntencao);
 

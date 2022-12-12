@@ -1,9 +1,20 @@
 import express from "express";
+import nodemailer from "nodemailer";
 import IntencaoModel from "../models/intencao.model.js";
 import isAuth from "../middlewares/isAuth.js";
+import UserModel from "../models/user.model.js";
+import OrgaoModel from "../models/orgao.model.js";
 
 const IntencaoRouter = express.Router();
 
+const transporter = nodemailer.createTransport({
+    service: "Hotmail",
+    auth: {
+        secure: false,
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS
+    }
+});
 
 IntencaoRouter.post('/create', isAuth, async (req, res) => {
     /* 	#swagger.tags = ['Intencao']
@@ -22,6 +33,19 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
         //Verificar como o será passado o usuário logado e sua unidade
         const newIntencao = await IntencaoModel.create(req.body)
 
+        //Envio de email confirmando a inclusao de nova intencao
+        const user = await UserModel.findById(req.body.userId)
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: user.email,
+            subject: "Inclusão de intenção de permuta confirmada",
+            html: `
+                <p>${user.name},</p>
+                <p>Confirmamos a inclusão da sua intenção de permuta.</p>
+            `
+        };
+        await transporter.sendMail(mailOptions);
+        
         return res.status(201).json(newIntencao);
 
     } catch (error) {

@@ -119,6 +119,30 @@ userRouter.post('/sign-in', async (req, res) => {
     }
 })
 
+userRouter.get('/verify-password', isAuth, async (req, res) => {
+
+    /* 	#swagger.tags = ['User']
+        #swagger.path = '/user/verify-password'
+        #swagger.description = 'Verify user password'
+    */
+
+    try {
+
+        const id = req.query.id
+        const password = req.query.password
+        const user = await UserModel.findById(id)
+
+        const match = await bcrypt.compare(password, user['passwordHash'])
+        return res.status(200).json(match)
+
+    } catch (error) {
+
+        console.log(error);
+        return res.status(500).json(error.errors);
+
+    }
+})
+
 userRouter.get('/all', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['User']
@@ -147,20 +171,27 @@ userRouter.get('/all', isAuth, async (req, res) => {
     }
 })
 
-userRouter.put('/change-password', async (req, res) => {
+userRouter.put('/update-user', async (req, res) => {
     /* 	#swagger.tags = ['User']
-        #swagger.path = '/user/change-password'
-        #swagger.description = 'Change user password'
+        #swagger.path = '/user/update-user'
+        #swagger.description = 'Update user data'
     */
 
     try {
 
-        const {_id} = req.body
-        const hashedPassword = await generateHashedPassword(req, res)
+        const {_id, password, orgaoId, unidadeId} = req.body
 
-        const user = await UserModel.findOneAndUpdate({_id : _id}, {passwordHash: hashedPassword}, { new: true, runValidators: true })
+        const info = {}
 
-        console.log(user)
+        if (password){
+            const hashedPassword = await generateHashedPassword(req, res)
+            info['passwordHash'] = hashedPassword
+        }
+
+        if (orgaoId) info['orgaoId'] = orgaoId
+        if (unidadeId) info['unidadeId'] = unidadeId
+
+        const user = await UserModel.findOneAndUpdate({_id : _id}, info, { new: true, runValidators: true })
 
         // Remove passwordHash property from object.
         delete user['_doc'].passwordHash;

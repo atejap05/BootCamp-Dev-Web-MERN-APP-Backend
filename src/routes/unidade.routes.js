@@ -30,7 +30,7 @@ UnidadeRouter.post('/create', isAuth, isAdmin, async (req, res) => {
 
 })
 
-UnidadeRouter.get('/byOrgao', isAuth, async (req, res) => {
+UnidadeRouter.get('/byOrgao', async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']
         #swagger.path = '/unidade/byOrgao'

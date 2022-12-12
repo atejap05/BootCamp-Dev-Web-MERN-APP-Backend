@@ -1,50 +1,9 @@
 import express from "express";
 import IntencaoModel from "../models/intencao.model.js";
 import isAuth from "../middlewares/isAuth.js";
-import UserModel from "../models/user.model.js";
-import UnidadeModel from "../models/unidade.model.js";
 
 const IntencaoRouter = express.Router();
 
-
-const populateIntencoes = async (allIntencoes) => {
-
-    const userIds = allIntencoes.map(intent => intent.userId)
-    const unidadesOrigemIds = allIntencoes.map(intent => intent.origemId)
-    const unidadesDestinoIds = allIntencoes.map(intent => intent.destinoId)
-
-    const users = await UserModel.find({ '_id': { $in: userIds } });
-    const unidadesOrigem = await UnidadeModel.find({ '_id': { $in: unidadesOrigemIds } });
-    const unidadesDestino = await UnidadeModel.find({ '_id': { $in: unidadesDestinoIds } });
-
-    const populatedIntents = []
-
-    allIntencoes.forEach(intent => {
-
-        // Get user
-        const user = users.find(user => user._id.toString() === intent.userId.toString())
-
-        delete user['_doc'].passwordHash
-
-        // get Unidade origem.
-        const unidadeOrigem = unidadesOrigem.find(u => u._id.toString() === intent.origemId.toString())
-        //console.log(unidadeOrigem)
-
-        // get Unidade destino.
-        const unidadeDestino = unidadesDestino.find(u => u._id.toString() === intent.destinoId.toString())
-        //console.log(unidadeDestino)
-
-        populatedIntents.push({
-            _id: intent._id,
-            createdAt: intent.createdAt,
-            unidadeOrigem,
-            unidadeDestino,
-            user
-        })
-    } )
-
-    return populatedIntents
-}
 
 IntencaoRouter.post('/create', isAuth, async (req, res) => {
     /* 	#swagger.tags = ['Intencao']
@@ -71,21 +30,21 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
     }
 });
 
-IntencaoRouter.delete('/delete/:id', isAuth, async (req, res) =>{
-   try {
-    /* 	#swagger.tags = ['Intencao']
-            #swagger.path = '/intencao/delete'
-            #swagger.description = 'Endpoint to delete an "intenção"'
-        */
-    const { id } = req.params;   
-    const deletedIntencao = await IntencaoModel.findByIdAndDelete(id);
-    return res.status(200).json(deletedIntencao);
-    
-   } catch (error) {
-    console.log(error);
-    return res.status(400).json(error.errors)
-   } 
-}
+IntencaoRouter.delete('/delete/:id', isAuth, async (req, res) => {
+        try {
+            /* 	#swagger.tags = ['Intencao']
+                    #swagger.path = '/intencao/delete'
+                    #swagger.description = 'Endpoint to delete an "intenção"'
+                */
+            const {id} = req.params;
+            const deletedIntencao = await IntencaoModel.findByIdAndDelete(id);
+            return res.status(200).json(deletedIntencao);
+
+        } catch (error) {
+            console.log(error);
+            return res.status(400).json(error.errors)
+        }
+    }
 );
 
 
@@ -96,13 +55,13 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
         #swagger.description = 'Endpoint to get all"intenção"'
     */
 
-    try{
+    try {
 
         const allIntencoes = await IntencaoModel.find()
-        .populate({path:"userId", select: {passwordHash: 0}, populate: {path:"unidadeId"}})
-        .populate({path:"userId", select: {passwordHash: 0}, populate: {path:"orgaoId"}})
-    .populate({path:"origemId", populate:{path:"orgaoId"}})
-    .populate({path:"destinoId", populate:{path:"orgaoId"}})
+            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
+            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
+            .populate({path: "origemId", populate: {path: "orgaoId"}})
+            .populate({path: "destinoId", populate: {path: "orgaoId"}})
         // const resposta = await populateIntencoes(allIntencoes)
         return res.status(200).json(allIntencoes)
 
@@ -112,7 +71,7 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
     }
 });
 
-IntencaoRouter.get('/byUser/:userId', async (req,res) => {
+IntencaoRouter.get('/byUser/:userId', async (req, res) => {
 
     /* 	#swagger.tags = ['Intencao']
         #swagger.path = '/intencao/byUser/{userId}'
@@ -127,11 +86,14 @@ IntencaoRouter.get('/byUser/:userId', async (req,res) => {
     */
 
     try {
-        const { userId } = req.params;
+        const {userId} = req.params;
         //Verificar como o será passado o usuário logado e sua unidade
         const allIntencoes = await IntencaoModel.find({userId})
-        const resposta = await populateIntencoes(allIntencoes)
-        return res.status(200).json(resposta)
+            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
+            .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
+            .populate({path: "origemId", populate: {path: "orgaoId"}})
+            .populate({path: "destinoId", populate: {path: "orgaoId"}})
+        return res.status(200).json(allIntencoes)
 
     } catch (error) {
         console.log(error);
@@ -139,7 +101,7 @@ IntencaoRouter.get('/byUser/:userId', async (req,res) => {
     }
 });
 
-IntencaoRouter.get('/:id', isAuth, async (req,res) => {
+IntencaoRouter.get('/:id', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Intencao']
         #swagger.path = '/intencao/{id}'
@@ -154,7 +116,7 @@ IntencaoRouter.get('/:id', isAuth, async (req,res) => {
 */
 
     try {
-        const { id } = req.params;
+        const {id} = req.params;
         //Verificar como o será passado o usuário logado e sua unidade
         const allIntencoes = await IntencaoModel.findById(id)
 

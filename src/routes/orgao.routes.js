@@ -31,7 +31,7 @@ orgaoRoute.post('/create', isAuth, isAdmin, async (req, res) => {
 
 })
 
-orgaoRoute.get('/', isAuth,async (req, res) => {
+orgaoRoute.get('/', async (req, res) => {
 
     /* 	#swagger.tags = ['Orgao']
         #swagger.path = '/orgao/'

@@ -16,10 +16,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const populateIntencao = async (userId) => {
+const populateIntencao = async (filter) => {
 
 
-    return IntencaoModel.find(userId)
+    return IntencaoModel.find(filter)
         .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
         .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
         .populate({path: "origemId", populate: {path: "orgaoId"}})
@@ -129,13 +129,17 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
 
     const filter = {}
 
-    if (req.query.state) filter['state'] = req.query.state
     if (req.query.destinoId) filter['destinoId'] = req.query.destinoId
 
     try {
 
-        const allIntencoes = await populateIntencao(filter);
-        // const resposta = await populateIntencoes(allIntencoes)
+        let allIntencoes = await populateIntencao(filter);
+
+        if (req.query.state) {
+            const state = req.query.state
+            allIntencoes = allIntencoes.filter(i => i['origemId']['state'] === state || i['destinoId']['state'] === state)
+        }
+
         return res.status(200).json(allIntencoes)
 
     } catch (error) {

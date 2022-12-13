@@ -79,7 +79,7 @@ UnidadeRouter.get('/porEstado/:sigla', isAuth, async (req, res) => {
 UnidadeRouter.get('/:id', isAuth, async (req, res) => {
 
     /* 	#swagger.tags = ['Unidade']
-        #swagger.path = '/unidade/:id'
+        #swagger.path = '/unidade/{id}'
         #swagger.description = 'Endpoint to get a specific "Unidade"'
     */
 

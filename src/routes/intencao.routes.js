@@ -137,7 +137,7 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
 
         if (req.query.state) {
             const state = req.query.state
-            allIntencoes = allIntencoes.filter(i => i['origemId']['state'] === state || i['destinoId']['state'] === state)
+            allIntencoes = allIntencoes.filter(i => i['origemId']['state'] === state)
         }
 
         return res.status(200).json(allIntencoes)

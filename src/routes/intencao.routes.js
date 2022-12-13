@@ -46,7 +46,7 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
 
         //Envio de email confirmando a inclusao de nova intencao
         const user = await UserModel.findById(req.body.userId)
-        
+
         const matchPermuta = await IntencaoModel
             .find({
                 origemId: req.body.destinoId,
@@ -93,7 +93,7 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
                 // await transporter.sendMail(mailOptions);
             });
         }
-        
+
         return res.status(201).json(newIntencao);
 
     } catch (error) {
@@ -129,7 +129,10 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
 
     const filter = {}
 
-    if (req.query.destinoId) filter['destinoId'] = req.query.destinoId
+    const orgaoId = req.query.orgaoId
+    filter['orgaoId'] = orgaoId
+
+    if (req.query.origemId) filter['origemId'] = req.query.origemId
 
     try {
 

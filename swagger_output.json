@@ -88,12 +88,12 @@
         "description": "Endpoint to get all\"intenção\"",
         "parameters": [
           {
-            "name": "state",
+            "name": "destinoId",
             "in": "query",
             "type": "string"
           },
           {
-            "name": "destinoId",
+            "name": "state",
             "in": "query",
             "type": "string"
           }
@@ -405,7 +405,7 @@
         }
       }
     },
-    "/unidade/:id": {
+    "/unidade/{id}": {
       "get": {
         "tags": [
           "Unidade"
@@ -415,9 +415,9 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Unidade ID.",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Unidade ID."
           }
         ],
         "responses": {
@@ -430,7 +430,7 @@
         }
       }
     },
-    "/unidade/delete/:id": {
+    "/unidade/delete/{id}": {
       "delete": {
         "tags": [
           "Unidade"
@@ -440,9 +440,9 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Unidade ID.",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "Unidade ID."
           }
         ],
         "responses": {
@@ -456,7 +456,9 @@
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/unidade/delete/:id": {
       "put": {
         "tags": [
           "Unidade"
@@ -571,13 +573,21 @@
           "User"
         ],
         "description": "Verify user password",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"
@@ -607,7 +617,7 @@
         "tags": [
           "User"
         ],
-        "description": "Change user data",
+        "description": "Update user data",
         "parameters": [
           {
             "name": "body",
@@ -618,13 +628,13 @@
                 "_id": {
                   "example": "any"
                 },
+                "password": {
+                  "example": "any"
+                },
                 "orgaoId": {
                   "example": "any"
                 },
                 "unidadeId": {
-                  "example": "any"
-                },
-                "password": {
                   "example": "any"
                 }
               }

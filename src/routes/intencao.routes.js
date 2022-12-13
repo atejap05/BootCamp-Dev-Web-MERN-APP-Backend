@@ -6,8 +6,8 @@ import sendMail from "../email/sendMail.js";
 
 const IntencaoRouter = express.Router();
 
-const populateIntencao = async (userId) => {
-  return IntencaoModel.find(userId)
+const populateIntencao = async (filter) => {
+  return IntencaoModel.find(filter)
     .populate({
       path: "userId",
       select: { passwordHash: 0 },
@@ -39,7 +39,7 @@ IntencaoRouter.post("/create", isAuth, async (req, res) => {
     //Verificar como o será passado o usuário logado e sua unidade
     const newIntencao = await IntencaoModel.create(req.body);
 
-    //Envio de email confirmando a inclusao de nova intencao e match, caso ocorra.
+    //Envio de email confirmando a inclusao de nova intencao
     const user = await UserModel.findById(req.body.userId);
 
     const matchPermuta = await IntencaoModel.find({
@@ -62,7 +62,7 @@ IntencaoRouter.post("/create", isAuth, async (req, res) => {
 IntencaoRouter.delete("/delete/:id", isAuth, async (req, res) => {
   try {
     /* 	#swagger.tags = ['Intencao']
-                    #swagger.path = '/intencao/delete'
+                    #swagger.path = '/intencao/delete/{id}'
                     #swagger.description = 'Endpoint to delete an "intenção"'
                 */
     const { id } = req.params;
@@ -82,12 +82,21 @@ IntencaoRouter.get("/all", isAuth, async (req, res) => {
 
   const filter = {};
 
-  if (req.query.state) filter["state"] = req.query.state;
-  if (req.query.destinoId) filter["destinoId"] = req.query.destinoId;
+  const orgaoId = req.query.orgaoId;
+  filter["orgaoId"] = orgaoId;
+
+  if (req.query.origemId) filter["origemId"] = req.query.origemId;
 
   try {
-    const allIntencoes = await populateIntencao(filter);
-    // const resposta = await populateIntencoes(allIntencoes)
+    let allIntencoes = await populateIntencao(filter);
+
+    if (req.query.state) {
+      const state = req.query.state;
+      allIntencoes = allIntencoes.filter(
+        (i) => i["origemId"]["state"] === state
+      );
+    }
+
     return res.status(200).json(allIntencoes);
   } catch (error) {
     console.log(error);

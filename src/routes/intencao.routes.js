@@ -105,7 +105,7 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
 IntencaoRouter.delete('/delete/:id', isAuth, async (req, res) => {
         try {
             /* 	#swagger.tags = ['Intencao']
-                    #swagger.path = '/intencao/delete'
+                    #swagger.path = '/intencao/delete/{id}'
                     #swagger.description = 'Endpoint to delete an "intenção"'
                 */
             const {id} = req.params;

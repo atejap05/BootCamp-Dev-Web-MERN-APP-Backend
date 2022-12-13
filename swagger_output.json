@@ -63,13 +63,20 @@
         }
       }
     },
-    "/intencao/delete": {
+    "/intencao/delete/{id}": {
       "delete": {
         "tags": [
           "Intencao"
         ],
         "description": "Endpoint to delete an \"intenção\"",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"

@@ -16,9 +16,10 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const populateIntencao = async (userId) => {
+const populateIntencao = async (filter) => {
 
-    return IntencaoModel.find(userId)
+
+    return IntencaoModel.find(filter)
         .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "unidadeId"}})
         .populate({path: "userId", select: {passwordHash: 0}, populate: {path: "orgaoId"}})
         .populate({path: "origemId", populate: {path: "orgaoId"}})
@@ -45,16 +46,53 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
 
         //Envio de email confirmando a inclusao de nova intencao
         const user = await UserModel.findById(req.body.userId)
-        const mailOptions = {
-            from: process.env.EMAIL,
-            to: user.email,
-            subject: "Inclusão de intenção de permuta confirmada",
-            html: `
-                <p>${user.name},</p>
-                <p>Confirmamos a inclusão da sua intenção de permuta.</p>
-            `
-        };
-        await transporter.sendMail(mailOptions);
+        
+        const matchPermuta = await IntencaoModel
+            .find({
+                origemId: req.body.destinoId,
+                destinoId: req.body.origemId
+            })
+            .populate({path: 'userId', select: ['name', 'email']})
+            .populate({path: 'origemId', select: 'name'})
+            .populate({path: 'destinoId', select: 'name'})
+
+        if (matchPermuta.length === 0) {
+            const message =
+                `No momento, não consta em nossa base de dados intenção de remoção que viabilize a permuta.
+                Caso seja incluída intenção que a viabilize, você será comunicado.`
+                console.log(message);
+        } else {
+            matchPermuta.forEach((match)=>{
+                const messageCurrentUser =
+                    `${user.name},
+                    Consta da nossa base da dados que o servidor ${match.userId.name}
+                    está lotado no(a) ${match.origemId.name} e 
+                    tem interesse de remover-se para ${match.destinoId.name}.
+                    Seu e-mail para contato é ${match.userId.email}.`
+                console.log(messageCurrentUser);
+                // const mailOptions = {
+                //     from: process.env.EMAIL,
+                //     to: user.email,
+                //     subject: "Inclusão de intenção de permuta confirmada",
+                //     txt: messageCurrentUser
+                // };
+                // await transporter.sendMail(mailOptions);
+
+                const messageMatchedUser =
+                    `${match.userId.name},
+                    O sevidor ${user.name} registrou interesse em remover-se do(a) ${match.origemId.name}
+                    para ${match.origemId.name}.
+                    Seu e-mail para contato é ${user.email}.`
+                console.log(messageMatchedUser);
+                // const mailOptions = {
+                //     from: process.env.EMAIL,
+                //     to: match.userId.name,
+                //     subject: "Inclusão de intenção de permuta confirmada",
+                //     txt: messageCurrentUser
+                // };
+                // await transporter.sendMail(mailOptions);
+            });
+        }
         
         return res.status(201).json(newIntencao);
 
@@ -67,7 +105,7 @@ IntencaoRouter.post('/create', isAuth, async (req, res) => {
 IntencaoRouter.delete('/delete/:id', isAuth, async (req, res) => {
         try {
             /* 	#swagger.tags = ['Intencao']
-                    #swagger.path = '/intencao/delete'
+                    #swagger.path = '/intencao/delete/{id}'
                     #swagger.description = 'Endpoint to delete an "intenção"'
                 */
             const {id} = req.params;
@@ -89,10 +127,19 @@ IntencaoRouter.get('/all', isAuth, async (req, res) => {
         #swagger.description = 'Endpoint to get all"intenção"'
     */
 
+    const filter = {}
+
+    if (req.query.destinoId) filter['destinoId'] = req.query.destinoId
+
     try {
 
-        const allIntencoes = await populateIntencao();
-        // const resposta = await populateIntencoes(allIntencoes)
+        let allIntencoes = await populateIntencao(filter);
+
+        if (req.query.state) {
+            const state = req.query.state
+            allIntencoes = allIntencoes.filter(i => i['origemId']['state'] === state)
+        }
+
         return res.status(200).json(allIntencoes)
 
     } catch (error) {

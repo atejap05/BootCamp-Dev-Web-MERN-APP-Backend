@@ -7,6 +7,17 @@ const stateRouter = express.Router();
 
 stateRouter.post('/create', isAuth, async (req, res) => {
 
+    /* 	#swagger.tags = ['State']
+        #swagger.path = '/state/create'
+        #swagger.description = 'Endpoint to create a "State"'
+    */
+
+    /*	#swagger.parameters['body'] = {
+        in: 'body',
+        description: 'State to be registered',
+        required: true,
+    */
+
     try {
 
         const newState = await StateModel.create(req.body)
@@ -20,6 +31,11 @@ stateRouter.post('/create', isAuth, async (req, res) => {
 })
 
 stateRouter.get('/all', isAuth, async (req, res) => {
+
+    /* 	#swagger.tags = ['State']
+        #swagger.path = '/state/all'
+        #swagger.description = 'Endpoint to create a "State"'
+    */
 
     try {
 

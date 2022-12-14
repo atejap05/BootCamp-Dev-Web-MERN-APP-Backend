@@ -36,6 +36,16 @@ IntencaoRouter.post("/create", isAuth, async (req, res) => {
     */
 
   try {
+
+    const intencao = await IntencaoModel.findOne({
+      "userId": req.body.userId,
+    "destinoId": req.body.destinoId,
+  "origemId": req.body.origemId});
+
+      if(intencao) {
+        return res.status(400).json({msg:"Intenção duplicada"});
+      }
+
     //Verificar como o será passado o usuário logado e sua unidade
     const newIntencao = await IntencaoModel.create(req.body);
 

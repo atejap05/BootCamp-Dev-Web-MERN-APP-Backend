@@ -2,6 +2,7 @@ import express from "express";
 import UnidadeModel from "../models/unidade.model.js"
 import isAuth from "../middlewares/isAuth.js";
 import isAdmin from "../middlewares/isAdmin.js";
+import IntencaoModel from "../models/intencao.model.js";
 
 const UnidadeRouter = express.Router();
 
@@ -126,6 +127,8 @@ UnidadeRouter.delete('/delete/:id', isAuth, isAdmin, async (req, res) => {
         if (!deletedUnidade) {
             return res.status(400).json({msg: "Unidade não encontrada!"});
         }
+
+        await IntencaoModel.deleteMany({$or:[{origemId: id},{destinoId: id}]});
 
         return res.status(200).json(deletedUnidade);
     } catch (error) {

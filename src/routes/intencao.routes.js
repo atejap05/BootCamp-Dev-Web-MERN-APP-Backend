@@ -37,16 +37,23 @@ IntencaoRouter.post("/create", isAuth, async (req, res) => {
 
   try {
 
+    // Verifica se origem e destino são iguais
+    if (req.body.origemId._id === req.body.destinoId) {
+      return res.status(400).json({ msg: "Unidades de origem e destino não podem ser iguais."})
+    }
+
+    // Verifica se a intenção já existe
     const intencao = await IntencaoModel.findOne({
-      "userId": req.body.userId,
-    "destinoId": req.body.destinoId,
-  "origemId": req.body.origemId});
+      userId: req.body.userId,
+      destinoId: req.body.destinoId,
+      origemId: req.body.origemId,
+    });
 
-      if(intencao) {
-        return res.status(400).json({msg:"Intenção duplicada"});
-      }
+    if (intencao) {
+      return res.status(400).json({ msg: "Intenção duplicada" });
+    }
 
-    //Verificar como o será passado o usuário logado e sua unidade
+    //Verificar como será passado o usuário logado e sua unidade
     const newIntencao = await IntencaoModel.create(req.body);
 
     //Envio de email confirmando a inclusao de nova intencao

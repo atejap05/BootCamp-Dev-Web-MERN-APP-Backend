@@ -65,4 +65,19 @@ const sendMail = (user, matchPermuta) => {
     transporter.sendMail(mailOptionsCurrentUser);
 }
 
+const sendNewPassword = (user, password) => {
+
+  const messageCurrentUser = `A sua nova senha temporária é ${password}. Por favor, defina uma nova senha assim que acessar o sistema.`
+
+  const mailOptionsCurrentUser = {
+    from: process.env.EMAIL,
+    to: user.email,
+    subject: "PremutaGov - nova senha",
+    html: messageCurrentUser,
+  };
+  transporter.sendMail(mailOptionsCurrentUser);
+
+}
+
 export default sendMail;
+export {sendNewPassword}

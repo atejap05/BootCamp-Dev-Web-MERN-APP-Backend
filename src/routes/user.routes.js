@@ -3,6 +3,7 @@ import UserModel from '../models/user.model.js'
 import bcrypt from "bcrypt";
 import generateToken from "../config/jwt.config.js";
 import isAuth from "../middlewares/isAuth.js";
+import {sendNewPassword} from "../email/sendMail.js";
 
 const userRouter = express.Router();
 const saltRounds = 10;
@@ -27,6 +28,26 @@ const generateHashedPassword = async (req, res) => {
     // create hashed password
     return bcrypt.hash(password, salt);
 
+}
+
+const updateUser = async (req, res) => {
+    const {_id, password, orgaoId, unidadeId} = req.body
+
+    const info = {}
+
+    if (password){
+        info['passwordHash'] = await generateHashedPassword(req, res)
+    }
+
+    if (orgaoId) info['orgaoId'] = orgaoId
+    if (unidadeId) info['unidadeId'] = unidadeId
+
+    const user = await UserModel.findOneAndUpdate({_id : _id}, info, { new: true, runValidators: true })
+
+    // Remove passwordHash property from object.
+    delete user['_doc'].passwordHash;
+
+    return user
 }
 
 userRouter.post('/sign-up', async (req, res) => {
@@ -179,22 +200,7 @@ userRouter.put('/update-user', async (req, res) => {
 
     try {
 
-        const {_id, password, orgaoId, unidadeId} = req.body
-
-        const info = {}
-
-        if (password){
-            const hashedPassword = await generateHashedPassword(req, res)
-            info['passwordHash'] = hashedPassword
-        }
-
-        if (orgaoId) info['orgaoId'] = orgaoId
-        if (unidadeId) info['unidadeId'] = unidadeId
-
-        const user = await UserModel.findOneAndUpdate({_id : _id}, info, { new: true, runValidators: true })
-
-        // Remove passwordHash property from object.
-        delete user['_doc'].passwordHash;
+        const user = await updateUser(req, res)
 
         /* #swagger.responses[201] = {
            schema: { "$ref": "#/definitions/User" },
@@ -209,4 +215,64 @@ userRouter.put('/update-user', async (req, res) => {
     }
 })
 
+userRouter.get('/new-password', async (req, res) => {
+
+    try {
+
+        req.body['email'] = req.query.email
+
+        const user = await getUser(req)
+
+        if (!user) {
+            /* #swagger.responses[409] = {
+               description: "User not registered." }
+            */
+            return res.status(409).json({msg: "e-mail não cadastrado"})
+        }
+
+        const char1 = "abcdefghijklmnopqrstuvwxyz"
+        let password = "";
+        for (let i = 0; i < 4; i++) {
+            password += char1.charAt(Math.floor(Math.random() * char1.length));
+        }
+        const char2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for (let i = 0; i < 4; i++) {
+            password += char2.charAt(Math.floor(Math.random() * char2.length));
+        }
+
+        const char3 = "0123456789"
+        for (let i = 0; i < 2; i++) {
+            password += char3.charAt(Math.floor(Math.random() * char3.length));
+        }
+
+        const char4 = "$*&@#!"
+        password += char4.charAt(Math.floor(Math.random() * char4.length));
+
+
+        req.body['_id'] = user['_id']
+        req.body['password'] = password
+
+        const updatatedUser = await updateUser(req, res)
+
+        if (updatatedUser) {
+            sendNewPassword(user, password)
+        }
+
+        /* #swagger.responses[201] = {
+           schema: { "$ref": "#/definitions/User" },
+           description: "User registered successfully." }
+        */
+        return res.status(201).json(updatatedUser);
+
+    } catch (error) {
+        console.log(error);
+        /* #swagger.responses[500] = {
+           description: "Registration error." }
+        */
+        return res.status(500).json(error.errors);
+    }
+
+})
+
 export default userRouter
+export {generateHashedPassword}

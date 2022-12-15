@@ -92,8 +92,7 @@ IntencaoRouter.get("/all", isAuth, async (req, res) => {
 
   const filter = {};
 
-  const orgaoId = req.query.orgaoId;
-  filter["orgaoId"] = orgaoId;
+  filter["orgaoId"] = req.query.orgaoId;
 
   if (req.query.origemId) filter["origemId"] = req.query.origemId;
 

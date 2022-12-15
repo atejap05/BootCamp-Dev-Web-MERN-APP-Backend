@@ -191,7 +191,7 @@ userRouter.put('/update-user', async (req, res) => {
         if (orgaoId) info['orgaoId'] = orgaoId
         if (unidadeId) info['unidadeId'] = unidadeId
 
-        const user = await UserModel.findOneAndUpdate({_id : _id}, info, { new: true, runValidators: true })
+        const user = await UserModel.findOneAndUpdate({_id : _id}, info, { new: true, runValidators: true }).populate('unidadeId')
 
         // Remove passwordHash property from object.
         delete user['_doc'].passwordHash;

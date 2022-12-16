@@ -217,6 +217,11 @@ userRouter.put('/update-user', async (req, res) => {
 
 userRouter.get('/new-password', async (req, res) => {
 
+    /* 	#swagger.tags = ['User']
+        #swagger.path = '/user/new-password'
+        #swagger.description = 'Change user password'
+    */
+
     try {
 
         req.body['email'] = req.query.email

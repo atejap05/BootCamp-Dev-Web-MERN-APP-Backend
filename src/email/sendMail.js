@@ -1,25 +1,34 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.mailgun.org",
-  port: 587,
-  auth: {
-    secure: false,
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-// const transporterFeedback = nodemailer.createTransport({
-//     service: "Hotmail",
-//     auth: {
-//         secure: false,
-//         user: process.env.EMAIL_FEEDBACK,
-//         pass: process.env.EMAIL_FEEDBACK_PASS
-//     }
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.mailgun.org",
+//   port: 587,
+//   auth: {
+//     secure: false,
+//     user: process.env.EMAIL,
+//     pass: process.env.EMAIL_PASS,
+//   },
 // });
 
-const sendMail = async (user, unidadeDestino, matchPermuta) => {
+const transporter = nodemailer.createTransport({
+  service: "Hotmail",
+  auth: {
+      secure: false,
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASS
+  }
+});
+
+const transporterFeedback = nodemailer.createTransport({
+    service: "Hotmail",
+    auth: {
+        secure: false,
+        user: process.env.EMAIL_FEEDBACK,
+        pass: process.env.EMAIL_FEEDBACK_PASS
+    }
+});
+
+const sendMail = (user, unidadeDestino, matchPermuta) => {
   let messageCurrentUser = "";
   if (matchPermuta.length === 0) {
     messageCurrentUser = `
@@ -47,24 +56,24 @@ const sendMail = async (user, unidadeDestino, matchPermuta) => {
         </ul>
         <p>Seu e-mail para contato é <a href="mailto:${user.email}">${user.email}</a>.</p>
         <br><p>PermutaGov</p>`;
-      // const mailOptionsMatchedUser = {
-      //     from: process.env.EMAIL_FEEDBACK,
-      //     to: match.userId.email,
-      //     subject: "Uma nova permuta cadastrada combina com a sua!",
-      //     html: messageMatchedUser
-      // };
-      // await transporterFeedback.sendMail(mailOptionsMatchedUser);
       const mailOptionsMatchedUser = {
-        from: process.env.EMAIL,
-        to: match.userId.email,
-        subject: "Uma nova permuta cadastrada combina com a sua!",
-        html: messageMatchedUser
+          from: process.env.EMAIL_FEEDBACK,
+          to: match.userId.email,
+          subject: "Uma nova permuta cadastrada combina com a sua!",
+          html: messageMatchedUser
       };
-      try {
-        await transporter.sendMail(mailOptionsMatchedUser);
-      } catch (error) {
-        console.log(error);
-      }
+      await transporterFeedback.sendMail(mailOptionsMatchedUser);
+      // const mailOptionsMatchedUser = {
+      //   from: process.env.EMAIL,
+      //   to: match.userId.email,
+      //   subject: "Uma nova permuta cadastrada combina com a sua!",
+      //   html: messageMatchedUser
+      // };
+      // try {
+      //   await transporter.sendMail(mailOptionsMatchedUser);
+      // } catch (error) {
+      //   console.log(error);
+      // }
     });
     messageCurrentUser += `<br><p>PermutaGov</p>`;
   }
@@ -75,7 +84,7 @@ const sendMail = async (user, unidadeDestino, matchPermuta) => {
     html: messageCurrentUser,
   };
   try {
-    await transporter.sendMail(mailOptionsCurrentUser);
+    transporter.sendMail(mailOptionsCurrentUser);
   } catch (error) {
     console.log(error);
   }

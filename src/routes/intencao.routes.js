@@ -3,6 +3,7 @@ import IntencaoModel from "../models/intencao.model.js";
 import isAuth from "../middlewares/isAuth.js";
 import UserModel from "../models/user.model.js";
 import sendMail from "../email/sendMail.js";
+import UnidadeModel from "../models/unidade.model.js";
 
 const IntencaoRouter = express.Router();
 
@@ -58,6 +59,7 @@ IntencaoRouter.post("/create", isAuth, async (req, res) => {
 
     //Envio de email confirmando a inclusao de nova intencao
     const user = await UserModel.findById(req.body.userId);
+    const unidadeDestino = await UnidadeModel.findById(req.body.destinoId);
 
     const matchPermuta = await IntencaoModel.find({
       origemId: req.body.destinoId,
@@ -67,7 +69,7 @@ IntencaoRouter.post("/create", isAuth, async (req, res) => {
       .populate({ path: "origemId", select: "name" })
       .populate({ path: "destinoId", select: "name" });
 
-    sendMail(user, matchPermuta);
+    sendMail(user, unidadeDestino, matchPermuta);
 
     return res.status(201).json(newIntencao);
   } catch (error) {
